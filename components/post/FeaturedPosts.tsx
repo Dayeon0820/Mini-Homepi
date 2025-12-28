@@ -21,7 +21,7 @@ const PostGrid = styled.div`
 
 const PostCard = styled.div<{ $variant?: "yellow" | "pink" }>`
   background: ${({ theme, $variant }) =>
-    $variant === "pink" ? "#FFF0F3" : theme.colors.secondary};
+    $variant === "pink" ? theme.colors.accent500 : theme.colors.secondary};
   border: 2px dotted
     ${({ theme, $variant }) =>
       $variant === "pink" ? theme.colors.accent : theme.colors.primary};

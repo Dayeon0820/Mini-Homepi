@@ -4,8 +4,12 @@
 @tailwind utilities;
 
 :root {
-  --lemon-grad-start: #fdffef;
-  --lemon-grad-end: #fff4b5;
+  /* 아주 연한 파스텔 옐로우 (상단) */
+  --soft-grad-top: #fffde4;
+  /* 아주 연한 파스텔 민트 (중간) */
+  --soft-grad-middle: #e0f7fa;
+  /* 아주 연한 파스텔 블루 (하단) */
+  --soft-grad-bottom: #e8f5fd;
 }
 
 body {
@@ -13,9 +17,10 @@ body {
   padding: 0;
 
   background: linear-gradient(
-    135deg,
-    var(--lemon-grad-start) 0%,
-    var(--lemon-grad-end) 100%
+    to bottom,
+    var(--soft-grad-top) 0%,
+    var(--soft-grad-middle) 70%,
+    var(--soft-grad-bottom) 100%
   );
   background-attachment: fixed; /* 스크롤해도 배경은 고정! */
   min-height: 100vh;

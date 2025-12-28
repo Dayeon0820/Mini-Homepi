@@ -8,7 +8,7 @@ import {
   StyleSheetManager,
   ThemeProvider,
 } from "styled-components";
-import { theme } from "@/styles/theme"; // 테마 불러오기
+import { lemonTheme } from "@/styles/theme"; // 테마 불러오기
 
 export default function StyledComponentsRegistry({
   children,
@@ -24,11 +24,11 @@ export default function StyledComponentsRegistry({
   });
 
   if (typeof window !== "undefined")
-    return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+    return <ThemeProvider theme={lemonTheme}>{children}</ThemeProvider>;
 
   return (
     <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={lemonTheme}>{children}</ThemeProvider>
     </StyleSheetManager>
   );
 }

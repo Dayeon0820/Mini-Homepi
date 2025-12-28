@@ -7,7 +7,7 @@ const Wrapper = styled.section`
   margin-top: 40px;
   background: rgba(255, 255, 255, 0.3);
   border: 4px solid rgba(198, 190, 190, 0.3);
-  border-bottom: 4px dotted ${({ theme }) => theme.colors.pinklight};
+  border-bottom: 4px dotted ${({ theme }) => theme.colors.accent300};
   border-top-left-radius: ${({ theme }) => theme.borderRadius.medium};
   border-top-right-radius: ${({ theme }) => theme.borderRadius.medium};
   padding: 8px 0 12px 0;

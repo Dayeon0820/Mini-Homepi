@@ -11,9 +11,9 @@ const Outer = styled.div`
   height: 650px;
   display: flex;
   gap: 15px;
-  box-shadow: ${(props) => props.theme.shadows.lemon};
+  //box-shadow: ${(props) => props.theme.shadows.lemon};
   position: relative;
-  box-shadow: 0 20px 40px rgba(255, 217, 61, 0.3);
+  //box-shadow: 0 20px 40px ${(props) => props.theme.shadows.lemon};
   position: relative; /* Tabs의 absolute 기준점 */
 `;
 
@@ -27,11 +27,18 @@ const Inner = styled.div`
   overflow: hidden;
 `;
 
-export default function MainFrame({ children }: { children: React.ReactNode }) {
+interface MainFrameProps {
+  children: React.ReactNode;
+  isOwner: boolean;
+}
+
+export default function MainFrame({ children, isOwner }: MainFrameProps) {
   return (
     <Outer>
       <Inner>{children}</Inner>
-      <Tabs />
+
+      {/* sOwner가 true일 때만 탭(Tabs)을 보여줍니다 */}
+      {isOwner && <Tabs />}
     </Outer>
   );
 }

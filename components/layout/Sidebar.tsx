@@ -44,7 +44,7 @@ const FriendBadge = styled.div`
   margin-bottom: 18px;
   padding: 6px 12px;
 
-  background: ${({ theme }) => theme.colors.pinklight};
+  background: ${({ theme }) => theme.colors.accent500};
   color: ${({ theme }) => theme.colors.accent};
 
   font-size: 12px;
@@ -95,12 +95,18 @@ const NameCard = styled.div`
   background: ${({ theme }) => theme.colors.gray100};
   color: ${({ theme }) => theme.colors.gray700};
   border-radius: ${({ theme }) => theme.borderRadius.small};
-  border: 1px solid ${({ theme }) => theme.colors.pinklight};
+  border: 1px solid ${({ theme }) => theme.colors.accent300};
   font-weight: 700;
   font-size: 14px;
 `;
 
-export default function Sidebar() {
+export default function Sidebar({
+  username,
+  isOwner,
+}: {
+  username: string;
+  isOwner: boolean;
+}) {
   return (
     <SideContainer>
       <TodayBox>
@@ -130,7 +136,13 @@ export default function Sidebar() {
       <div style={{ marginTop: "auto", width: "100%", textAlign: "center" }}>
         <NameCard>이다연 (♀)</NameCard>
 
-        <WaveButton>프로필 수정</WaveButton>
+        {isOwner ? (
+          // 주인일 때: 프로필 수정
+          <WaveButton>프로필 수정</WaveButton>
+        ) : (
+          // 손님일 때: 일촌 신청 (핑크 테마 자동 적용됨)
+          <WaveButton>❤ 친구 신청하기</WaveButton>
+        )}
       </div>
     </SideContainer>
   );

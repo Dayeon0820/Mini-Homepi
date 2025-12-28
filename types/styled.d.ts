@@ -14,9 +14,11 @@ declare module "styled-components" {
       brown700: string;
       brown500: string;
       brown300: string;
+      brown100: string;
       accent: string;
       blue: string;
-      pinklight: string;
+      accent300: string;
+      accent500: string;
       success: string;
     };
     borderRadius: {
