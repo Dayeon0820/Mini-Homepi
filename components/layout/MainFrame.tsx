@@ -29,16 +29,14 @@ const Inner = styled.div`
 
 interface MainFrameProps {
   children: React.ReactNode;
-  isOwner: boolean;
 }
 
-export default function MainFrame({ children, isOwner }: MainFrameProps) {
+export default function MainFrame({ children }: MainFrameProps) {
   return (
     <Outer>
       <Inner>{children}</Inner>
 
-      {/* sOwner가 true일 때만 탭(Tabs)을 보여줍니다 */}
-      {isOwner && <Tabs />}
+      <Tabs />
     </Outer>
   );
 }

@@ -3,6 +3,7 @@
 import { use } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import { useIsOwner } from "@/hooks/useIsOwner";
 import {
   ChevronLeft,
   ChevronRight,
@@ -92,14 +93,6 @@ const PostList = styled.div`
   flex-direction: column;
   gap: 30px;
 
-  /* 스크롤바 커스텀 */
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: ${(props) => props.theme.colors.accent300};
-    border-radius: 10px;
-  }
   padding: 10px 0 30px 0;
 `;
 
@@ -185,18 +178,18 @@ export default function DiaryPage({
   const router = useRouter();
 
   // 🚧 임시: 내 아이디가 'me'라고 가정 (주인 여부 확인용)
-  const isOwner = username === "me";
+  const isOwner = useIsOwner();
 
   return (
     <Container>
       {/* 1. 헤더 영역 */}
       <Header>
         <DateNav>
-          <button className="hover:text-yellow-500">
+          <button>
             <ChevronLeft />
           </button>
           <span>2025.12</span>
-          <button className="hover:text-yellow-500">
+          <button>
             <ChevronRight />
           </button>
         </DateNav>

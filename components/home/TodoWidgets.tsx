@@ -10,7 +10,7 @@ const Wrapper = styled.section`
   border-bottom: 4px dotted ${({ theme }) => theme.colors.accent300};
   border-top-left-radius: ${({ theme }) => theme.borderRadius.medium};
   border-top-right-radius: ${({ theme }) => theme.borderRadius.medium};
-  padding: 8px 0 12px 0;
+  padding: 8px 0 12px 10px;
 `;
 
 const Title = styled.div`

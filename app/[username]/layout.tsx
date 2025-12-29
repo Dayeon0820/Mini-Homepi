@@ -25,7 +25,7 @@ export default function UserLayout({
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <MainFrame isOwner={isOwner}>
+      <MainFrame>
         {/* 사이드바에도 주인 여부를 알려줍니다 */}
         <Sidebar username={username} isOwner={isOwner} />
         {children}

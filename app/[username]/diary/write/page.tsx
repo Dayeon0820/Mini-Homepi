@@ -1,6 +1,7 @@
 "use client";
 
 import styled from "styled-components";
+import BackButton from "@/components/common/Button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -26,31 +27,11 @@ const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px dashed ${(props) => props.theme.colors.brown300};
+  border-bottom: 2px dashed ${(props) => props.theme.colors.brown500};
   padding-bottom: 15px;
 
   span {
     color: ${(props) => props.theme.colors.brown700};
-  }
-`;
-
-const BackButton = styled.button`
-  background-color: ${(props) => props.theme.colors.brown100};
-  color: ${(props) => props.theme.colors.brown700};
-  border: 1px solid ${(props) => props.theme.colors.brown500};
-  padding: 5px 10px;
-  border-radius: 10px; /* 둥글게 */
-  font-weight: bold;
-  font-size: 0.9rem;
-  font-family: "NeoDunggeunmo", sans-serif; /* 폰트 통일 */
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: all 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateX(-2px); /* 살짝 왼쪽으로 움직이는 효과 */
   }
 `;
 
@@ -164,15 +145,12 @@ const SaveButton = styled.button`
 `;
 
 export default function DiaryWritePage() {
-  const router = useRouter();
   const [weather, setWeather] = useState("sun");
 
   return (
     <Container>
       <TopBar>
-        <BackButton onClick={() => router.back()}>
-          <ChevronLeft size={18} /> 취소
-        </BackButton>
+        <BackButton />
         <span className="font-bold text-brown-700">다이어리 쓰기</span>
       </TopBar>
 
