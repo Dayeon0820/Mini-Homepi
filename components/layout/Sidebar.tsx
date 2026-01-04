@@ -1,6 +1,7 @@
 "use client";
 import styled from "styled-components";
 import { Smile, Star } from "lucide-react";
+import Link from "next/link";
 
 const SideContainer = styled.aside`
   width: 280px;
@@ -138,7 +139,9 @@ export default function Sidebar({
 
         {isOwner ? (
           // 주인일 때: 프로필 수정
-          <WaveButton>프로필 수정</WaveButton>
+          <WaveButton>
+            <Link href="/edit">프로필 수정</Link>
+          </WaveButton>
         ) : (
           // 손님일 때: 일촌 신청 (핑크 테마 자동 적용됨)
           <WaveButton>❤ 친구 신청하기</WaveButton>
