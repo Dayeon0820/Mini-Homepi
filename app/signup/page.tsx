@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import MainFrame from "@/components/layout/MainFrame";
 import { Chewy } from "next/font/google";
+import { signupAction } from "@/lib/actions/auth";
 
 const chewy = Chewy({ weight: "400", subsets: ["latin"] });
 
@@ -189,23 +190,38 @@ export default function SignupPage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting }, // isSubmitting: 전송 중인지 확인하는 변수
   } = useForm<ISignupForm>({
     mode: "onChange",
   });
 
   const password = watch("userPw");
 
-  const onSubmit: SubmitHandler<ISignupForm> = (data) => {
-    alert("환영합니다! " + data.nickname + "님");
+  ////////////서버엑션 연결/////////////////
+  const onSubmit: SubmitHandler<ISignupForm> = async (data) => {
+    // React Hook Form은 JSON 데이터를 주는데
+    // Server Action은 FormData를 원하므로 변환한다
+    const formData = new FormData();
+
+    formData.append("username", data.userId); // 프론트(userId) -> 서버(username) 매핑
+    formData.append("password", data.userPw); // 프론트(userPw) -> 서버(password) 매핑
+    formData.append("nickname", data.nickname);
+
+    // 서버로 전송
+    const result = await signupAction(formData);
+
+    // 실패했을 때만 알림 (성공하면 알아서 로그인 페이지로 이동함)
+    if (!result?.success) {
+      alert(result?.message || "회원가입 실패");
+    }
   };
 
   return (
     <MainFrame withTabs={false}>
       <PageContent>
-        {/* FormContainer가 메모지와 버튼을 모두 감쌉니다 */}
+        {/* FormContainer가 메모지와 버튼을 모두 감싼다 */}
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
-          {/* 🟡 1. 입력 영역 (노란색 메모지) */}
+          {/*  1. 입력 영역 (노란색 메모지) */}
           <MemoPad>
             <Title>
               Join <span>Day.zip</span>
@@ -231,7 +247,11 @@ export default function SignupPage() {
                   $hasError={!!errors.userPw}
                   {...register("userPw", {
                     required: "필수 입력입니다.",
-                    minLength: { value: 6, message: "6자 이상 입력해주세요" },
+                    minLength: { value: 8, message: "8자 이상 입력해주세요" },
+                    pattern: {
+                      value: /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/,
+                      message: "영문과 숫자를 섞어서 만들어주세요.",
+                    },
                   })}
                 />
               </InputRow>
@@ -268,7 +288,9 @@ export default function SignupPage() {
 
           {/* ⚪ 2. 버튼 영역 (메모지 밖, 하얀 종이 위) */}
           <ActionArea>
-            <SubmitBtn type="submit">다이어리 만들기</SubmitBtn>
+            <SubmitBtn type="submit" disabled={isSubmitting}>
+              다이어리 만들기
+            </SubmitBtn>
 
             <LinkText>
               이미 계정이 있나요?

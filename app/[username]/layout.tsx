@@ -5,6 +5,7 @@ import { ThemeProvider } from "styled-components";
 import { lemonTheme, pinkTheme } from "@/styles/theme";
 import MainFrame from "@/components/layout/MainFrame";
 import Sidebar from "@/components/layout/Sidebar";
+import { useIsOwner } from "@/Hooks/useIsOwner";
 
 export default function UserLayout({
   children,
@@ -15,10 +16,9 @@ export default function UserLayout({
 }) {
   // 🚧 임시 로직: 내 아이디가 'me'라고 가정
   // 나중에는 실제 로그인 세션 ID와 비교해야 함
-  const myId = "me";
+
   const { username } = use(params);
-  const isOwner = username === myId; //
-  console.log("username: ", username);
+  const isOwner = useIsOwner();
 
   // 주인이면 레몬, 손님이면 핑크 테마 선택
   const currentTheme = isOwner ? lemonTheme : pinkTheme;

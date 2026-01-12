@@ -9,7 +9,7 @@ const Container = styled.div`
   align-items: center;
   padding-bottom: 15px;
   border-bottom: 2px dashed ${(props) => props.theme.colors.brown700}; /* 점선 디자인 유지 */
-  margin-bottom: 20px; /* 헤더 아래 여백 자동 추가 */
+  margin-bottom: 10px; /* 헤더 아래 여백 자동 추가 */
   flex-shrink: 0; /* 높이가 찌그러지지 않게 고정 */
 `;
 

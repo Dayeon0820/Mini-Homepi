@@ -3,7 +3,7 @@
 import { use } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import { useIsOwner } from "@/hooks/useIsOwner";
+import { useIsOwner } from "@/Hooks/useIsOwner";
 import {
   ChevronLeft,
   ChevronRight,
@@ -76,10 +76,10 @@ const WriteButton = styled.button`
   transition: transform 0.1s;
 
   &:hover {
-    transform: translateY(-2px);
+    transform: scale(1.01);
   }
   &:active {
-    transform: translateY(0);
+    transform: scale(1);
     box-shadow: none;
   }
 `;
@@ -105,6 +105,12 @@ const PostCard = styled.div`
   position: relative;
   box-shadow: 4px 4px 0px ${(props) => props.theme.colors.secondary};
   margin-right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateX(2px);
+  }
 `;
 
 const PostDate = styled.div`

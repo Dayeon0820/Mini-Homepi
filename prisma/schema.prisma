@@ -1,0 +1,128 @@
+// 1. 클라이언트 생성기 (기본 설정)
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+// 2. DB 연결 설정
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL") 
+}
+
+// 3. 유저 모델
+model User {
+  id        String   @id @default(uuid()) // string -> String (대문자!)
+
+  username  String   @unique
+  password  String
+  nickname  String
+  
+  bio       String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now()) 
+
+  // [관계 설정 추가]
+  // 유저는 하나의 미니홈피를 가질 수 있다 (선택적: ?)
+  minihompy Minihompy?
+
+  //내가 작성한 활동들
+  posts     Post[]            // 내가 쓴 게시물
+  comments  Comment[]         // 내가 쓴 댓글
+  likes     Like[]            // 내가 누른 좋아요
+  guestbooks Guestbook[]      // 내가 남의 집에 쓴 방명록
+
+  // 친구 관계 (7.1 친구 추가 - 즉시 맞팔로우 개념)
+  followedBy User[]  @relation("UserFollows")
+  following  User[]  @relation("UserFollows")
+}
+
+// 4. 미니홈피 모델 (프로필 페이지)
+model Minihompy {
+  id          String   @id @default(uuid())
+  title       String   @default("나의 미니홈피")
+  skinColor   String   @default("#F3F3F3") // 배경색
+  
+  // 방문자 수 (3.1 통계)
+  todayVisit  Int      @default(0)
+  totalVisit  Int      @default(0)
+
+  // 관계 설정
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+
+  // 이 홈피에 달린 콘텐츠들
+  posts       Post[]       // 이 홈피의 게시물들 (다이어리)
+  guestbooks  Guestbook[]  // 이 홈피에 남겨진 방명록
+}
+
+// 5. 게시물 (다이어리/게시판)
+model Post {
+  id          String   @id @default(uuid())
+  
+  // [4.1] 게시물 내용
+  title       String
+  content     String   // 본문 (텍스트)
+  createdAt   DateTime @default(now()) // [4.1] 작성일 자동 저장
+  updatedAt   DateTime @updatedAt      // 수정일
+
+  //  연결: 어느 미니홈피에 써진 글인지
+  minihompyId String
+  minihompy   Minihompy @relation(fields: [minihompyId], references: [id])
+
+  //  작성자 (친구 피드 기능을 위해 필요)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+
+  // 하위 콘텐츠
+  comments    Comment[] // [5.1] 댓글 목록
+  likes       Like[]    // [6.1] 좋아요 목록
+}
+
+// 6. 댓글
+model Comment {
+  id        String   @id @default(uuid())
+  content   String   // [5.1] 텍스트만 허용
+  createdAt DateTime @default(now())
+
+  // 어느 게시물의 댓글인지
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // 누가 썼는지
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+// 7. 좋아요 (관심 표현)
+model Like {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // 누가
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  // 어떤 글을
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // [6.1] 중복 방지 (한 사람이 한 글에 좋아요는 한 번만)
+  @@unique([userId, postId])
+}
+
+// 8. 방명록 (일촌평/방명록)
+model Guestbook {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  // 어느 홈피에 남겼는지
+  minihompyId String
+  minihompy   Minihompy @relation(fields: [minihompyId], references: [id])
+
+  // 누가 썼는지
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+}

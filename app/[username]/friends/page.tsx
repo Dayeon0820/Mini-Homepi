@@ -4,7 +4,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { Search, UserPlus, Home, MoreHorizontal, User } from "lucide-react";
-import { useIsOwner } from "@/hooks/useIsOwner";
+import { useIsOwner } from "@/Hooks/useIsOwner";
 
 // --- 스타일 컴포넌트 ---
 

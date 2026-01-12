@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import MainFrame from "@/components/layout/MainFrame";
 import { Chewy } from "next/font/google";
+import { loginAction } from "@/lib/actions/auth";
 
 const chewy = Chewy({ weight: "400", subsets: ["latin"] });
 
@@ -102,6 +103,7 @@ const SubmitBtn = styled.button`
     transform: translate(2px, 2px);
     box-shadow: none;
   }
+  margin-top: 20px;
 `;
 
 const FooterLink = styled.div`
@@ -126,11 +128,22 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ILoginForm>();
 
-  const onSubmit: SubmitHandler<ILoginForm> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
+    // 1. FormData 만들기
+    const formData = new FormData();
+    formData.append("username", data.userId);
+    formData.append("password", data.userPw);
+
+    // 2. 서버로 전송
+    const result = await loginAction(formData);
+
+    // 3. 실패 시 에러 알림 (성공하면 redirect 되므로 실행 안 됨)
+    if (!result?.success) {
+      alert(result?.message || "로그인 실패");
+    }
   };
 
   return (
@@ -156,7 +169,7 @@ export default function LoginPage() {
               {errors.userPw && <ErrorMsg>{errors.userPw.message}</ErrorMsg>}
             </InputRow>
 
-            <SubmitBtn type="submit" style={{ marginTop: "20px" }}>
+            <SubmitBtn type="submit" disabled={isSubmitting}>
               로그인
             </SubmitBtn>
           </form>
