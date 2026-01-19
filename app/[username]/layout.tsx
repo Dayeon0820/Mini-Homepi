@@ -14,9 +14,6 @@ export default function UserLayout({
   children: React.ReactNode;
   params: Promise<{ username: string }>;
 }) {
-  // 🚧 임시 로직: 내 아이디가 'me'라고 가정
-  // 나중에는 실제 로그인 세션 ID와 비교해야 함
-
   const { username } = use(params);
   const isOwner = useIsOwner();
 

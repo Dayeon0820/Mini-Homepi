@@ -21,7 +21,8 @@ const CoverWrapper = styled.div`
   background-color: ${(props) => props.theme.colors.background};
 
   /* (모눈종이) 패턴  */
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       rgba(0, 0, 0, 0.05) 1px,
       /* 테마색을 쓰기 어렵다면 투명한 검정색 */ transparent 1px
     ),
@@ -130,7 +131,7 @@ export default function LandingPage() {
         <Logo></Logo>
 
         <ButtonGroup>
-          <Link href="/me">
+          <Link href="/login">
             <LoginButton>다이어리 펼치기</LoginButton>
           </Link>
 

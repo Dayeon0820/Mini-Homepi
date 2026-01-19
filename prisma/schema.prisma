@@ -42,7 +42,7 @@ model User {
 model Minihompy {
   id          String   @id @default(uuid())
   title       String   @default("나의 미니홈피")
-  skinColor   String   @default("#F3F3F3") // 배경색
+  
   
   // 방문자 수 (3.1 통계)
   todayVisit  Int      @default(0)

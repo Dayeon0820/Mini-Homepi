@@ -25,7 +25,7 @@ export default async function RootLayout({
     userId: session?.userId as string | undefined,
   };
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body>
         <StyledComponentsRegistry>
           <AuthProvider value={authData}>
