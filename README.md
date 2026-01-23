@@ -2,19 +2,8 @@
 
 > **"소중한 일상을 기록하고 친구들과 소통하는 나만의 공간"**
 > Next.js 14 App Router와 Supabase를 활용해 구축한 레트로 감성의 미니홈피 서비스입니다.
-<div align="center">
 
-  ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
-  ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
-  ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
-  <br>
-  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-  ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
-  ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
-
-
-</div>
-
+<img width="1122" height="740" alt="Image" src="https://github.com/user-attachments/assets/8f2bad66-f907-4273-9435-f5787b95f1c5" />
 
 ---
 
@@ -25,7 +14,20 @@
 - **개발 인원**: 1인 (Full-stack)
 - **기획 의도**: 사용자가 프로필을 꾸미고, 다이어리와 방명록을 통해 친구들과 일상을 공유하며 관심을 표현하는 웹 서비스입니다.
 
-<img width="1122" height="740" alt="Image" src="https://github.com/user-attachments/assets/8f2bad66-f907-4273-9435-f5787b95f1c5" />
+- <div align="center">
+
+  ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+  ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+  ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
+  <br>
+  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+  ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+  ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+
+
+</div>
+
+
 ---
 
 ## 🛠 기술 스택 (Tech Stack)
