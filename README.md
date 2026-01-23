@@ -66,7 +66,7 @@
 ## 🗂 데이터 모델링 (ERD)
 
 > Prisma Editor를 활용하여 체계적으로 설계된 데이터베이스 구조입니다.
-
+<img width="804" height="622" alt="Image" src="https://github.com/user-attachments/assets/930c3919-fc49-4244-89f3-021babd93a39" />
 
 
 - **User**: 사용자 핵심 정보
