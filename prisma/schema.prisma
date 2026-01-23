@@ -63,9 +63,12 @@ model Post {
   
   // [4.1] 게시물 내용
   title       String
-  content     String   // 본문 (텍스트)
+  content     String   @db.Text // 본문 (텍스트),  긴 글 저장을 위해 Text 타입 지정  
   createdAt   DateTime @default(now()) // [4.1] 작성일 자동 저장
   updatedAt   DateTime @updatedAt      // 수정일
+
+  weather   String   // "SUN", "CLOUD", "RAIN", "SNOW" (문자열로 저장)
+  isSecret  Boolean  @default(false) // true면 비밀글(나만 보기)
 
   //  연결: 어느 미니홈피에 써진 글인지
   minihompyId String

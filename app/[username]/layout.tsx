@@ -1,32 +1,35 @@
 // app/[username]/layout.tsx
-"use client";
-import { use } from "react";
-import { ThemeProvider } from "styled-components";
-import { lemonTheme, pinkTheme } from "@/styles/theme";
-import MainFrame from "@/components/layout/MainFrame";
-import Sidebar from "@/components/layout/Sidebar";
-import { useIsOwner } from "@/Hooks/useIsOwner";
 
-export default function UserLayout({
+import { getUserProfile } from "@/lib/actions/profile";
+import { getSession } from "@/lib/session";
+import ClientLayout from "@/components/layout/ClientLayout";
+
+export default async function UserLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
   params: Promise<{ username: string }>;
 }) {
-  const { username } = use(params);
-  const isOwner = useIsOwner();
+  // 1. URL 파라미터 가져오기 (비동기 처리)
+  const { username } = await params;
 
-  // 주인이면 레몬, 손님이면 핑크 테마 선택
-  const currentTheme = isOwner ? lemonTheme : pinkTheme;
+  // 2.  서버에서 'isOwner' 계산하기 (훅 대신 직접 비교!)
+  const session = await getSession();
+  const isOwner = session?.username === username;
 
+  // 3.  DB에서 프로필 데이터 가져오기
+  const profile = await getUserProfile(username);
+
+  // 유저가 없으면? (예외 처리)
+  if (!profile) {
+    return <div>존재하지 않는 미니홈피입니다. 😢</div>;
+  }
+
+  // 4. 모든 데이터를 껍데기(ClientLayout)에게 전달
   return (
-    <ThemeProvider theme={currentTheme}>
-      <MainFrame>
-        {/* 사이드바에도 주인 여부를 알려줍니다 */}
-        <Sidebar username={username} isOwner={isOwner} />
-        {children}
-      </MainFrame>
-    </ThemeProvider>
+    <ClientLayout isOwner={isOwner} profile={profile}>
+      {children}
+    </ClientLayout>
   );
 }

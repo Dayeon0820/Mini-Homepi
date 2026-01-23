@@ -102,11 +102,21 @@ const NameCard = styled.div`
   font-size: 14px;
 `;
 
-export default function Sidebar({
-  username,
-  isOwner,
-}: {
+interface ProfileData {
   username: string;
+  nickname: string;
+  profileImage: string | null;
+  bio: string | null;
+  todayVisit: number;
+  totalVisit: number;
+  friendsCount: number; // 친구 수
+}
+
+export default function Sidebar({
+  isOwner,
+  profile,
+}: {
+  profile: ProfileData;
   isOwner: boolean;
 }) {
   const params = useParams();
@@ -115,11 +125,27 @@ export default function Sidebar({
     <SideContainer>
       <TodayBox>
         <Star size={14} fill="#FFD93D" color="#FFD93D" />
-        TODAY <span style={{ color: "#FF6B6B" }}>15</span> | TOTAL 1234
+        TODAY <span style={{ color: "#FF6B6B" }}>{profile.todayVisit}</span> |
+        TOTAL {profile.totalVisit}
       </TodayBox>
 
       <ProfileCircle>
-        <Smile size={60} color="#CCCCCC" />
+        {profile.profileImage ? (
+          // 이미지가 있으면 보여주기
+          <img
+            src={profile.profileImage}
+            alt="프로필"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+          />
+        ) : (
+          // 이미지가 없으면 기본 스마일 아이콘
+          <Smile size={60} color="#CCCCCC" />
+        )}
       </ProfileCircle>
       <div
         style={{
@@ -129,21 +155,32 @@ export default function Sidebar({
         }}
       >
         <FriendBadge>
-          🌸 친구 <span>23</span>
+          🌸 친구 <span>{profile.friendsCount}</span>
         </FriendBadge>
       </div>
       <StatusBox>
-        오늘도 레몬처럼 상큼한 하루! 🍋 <br />
-        미니홈피 꾸미는 중 💛
+        {profile.bio ? (
+          // 줄바꿈 문자(\n)가 있을 수 있으니 pre-line 스타일 적용
+          <span style={{ whiteSpace: "pre-line" }}>{profile.bio}</span>
+        ) : (
+          // 소개글이 없을 때 기본 멘트
+          <span style={{ color: "#aaa" }}>
+            아직 소개글이 없습니다.
+            <br />
+            프로필을 꾸며보세요! 💛
+          </span>
+        )}
       </StatusBox>
 
       <div style={{ marginTop: "auto", width: "100%", textAlign: "center" }}>
-        <NameCard>이다연 (♀)</NameCard>
+        <NameCard>{profile.nickname}</NameCard>
 
         {isOwner ? (
           // 주인일 때: 프로필 수정
           <WaveButton>
-            <Link href={`/${userId}/edit`}>프로필 수정</Link>
+            <Link href={`/${userId}/edit`}>
+              <div>프로필 수정</div>
+            </Link>
           </WaveButton>
         ) : (
           // 손님일 때: 일촌 신청 (핑크 테마 자동 적용됨)
