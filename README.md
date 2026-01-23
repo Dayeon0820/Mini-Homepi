@@ -14,7 +14,7 @@
 - **개발 인원**: 1인 (Full-stack)
 - **기획 의도**: 사용자가 프로필을 꾸미고, 다이어리와 방명록을 통해 친구들과 일상을 공유하며 관심을 표현하는 웹 서비스입니다.
 
-- <div align="center">
+ <div align="center">
 
   ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
