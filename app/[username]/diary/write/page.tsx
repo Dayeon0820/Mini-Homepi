@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import BackButton from "@/components/common/Button";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import {
   ChevronLeft,
   Lock,
@@ -13,6 +13,7 @@ import {
   CloudRain,
   Snowflake,
 } from "lucide-react";
+import { createPostAction } from "@/lib/actions/diary";
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +36,7 @@ const TopBar = styled.div`
   }
 `;
 
-const FormArea = styled.div`
+const FormArea = styled.form`
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -134,6 +135,7 @@ const SaveButton = styled.button`
   border: 2px solid ${(props) => props.theme.colors.brown500};
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
   transition: all 0.15s ease;
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.01);
@@ -145,7 +147,28 @@ const SaveButton = styled.button`
 `;
 
 export default function DiaryWritePage() {
-  const [weather, setWeather] = useState("sun");
+  const router = useRouter();
+  const params = useParams(); // URL에서 username 가져오기
+  const username = params.username as string;
+
+  const [weather, setWeather] = useState("SUN");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 폼 제출 핸들러
+  const handleSubmit = async (formData: FormData) => {
+    setIsSubmitting(true);
+
+    // Server Action 호출
+    const result = await createPostAction(username, formData);
+
+    if (result.success) {
+      // 성공 시 목록 페이지로 이동
+      router.push(`/${username}/diary`);
+    } else {
+      alert(result.message);
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Container>
@@ -154,74 +177,83 @@ export default function DiaryWritePage() {
         <span className="font-bold text-brown-700">다이어리 쓰기</span>
       </TopBar>
 
-      <FormArea>
-        <TitleInput placeholder="제목을 입력하세요..." />
+      <FormArea action={handleSubmit}>
+        <TitleInput placeholder="제목을 입력하세요..." name="title" required />
 
         <OptionRow>
           {/* 날씨 선택 */}
           <WeatherSelect>
+            <input type="hidden" name="weather" value={weather} />
             {/* 맑음 (Sun) */}
             <WeatherBtn
-              $active={weather === "sun"}
-              onClick={() => setWeather("sun")}
+              type="button" // form submit 방지
+              $active={weather === "SUN"}
+              onClick={() => setWeather("SUN")}
             >
               <Sun
                 size={18}
                 // 선택되었을 때만 노란색, 아니면 회색
-                color={weather === "sun" ? "#FFD93D" : "#aaa"}
+                color={weather === "SUN" ? "#FFD93D" : "#aaa"}
               />
             </WeatherBtn>
 
             {/* 흐림 (Cloud) */}
             <WeatherBtn
-              $active={weather === "cloud"}
-              onClick={() => setWeather("cloud")}
+              $active={weather === "CLOUD"}
+              onClick={() => setWeather("CLOUD")}
+              type="button"
             >
               <Cloud
                 size={18}
                 // 선택되었을 때만 하늘색
-                color={weather === "cloud" ? "#90CAF9" : "#aaa"}
+                color={weather === "CLOUD" ? "#90CAF9" : "#aaa"}
               />
             </WeatherBtn>
 
             {/* 비 (Rain) */}
             <WeatherBtn
-              $active={weather === "rain"}
-              onClick={() => setWeather("rain")}
+              $active={weather === "RAIN"}
+              onClick={() => setWeather("RAIN")}
+              type="button"
             >
               <CloudRain
                 size={18}
                 // 선택되었을 때만 파란색
-                color={weather === "rain" ? "#42A5F5" : "#aaa"}
+                color={weather === "RAIN" ? "#42A5F5" : "#aaa"}
               />
             </WeatherBtn>
 
             {/* 눈 (Snow) */}
             <WeatherBtn
-              $active={weather === "snow"}
-              onClick={() => setWeather("snow")}
+              $active={weather === "SNOW"}
+              onClick={() => setWeather("SNOW")}
+              type="button"
             >
               <Snowflake
                 size={18}
                 // 선택되었을 때만 민트색
-                color={weather === "snow" ? "#80DEEA" : "#aaa"}
+                color={weather === "SNOW" ? "#80DEEA" : "#aaa"}
               />
             </WeatherBtn>
           </WeatherSelect>
 
           {/* 비밀글 체크 */}
           <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-500 hover:text-brown-700">
-            <input type="checkbox" className="accent-yellow-400 w-4 h-4" />
+            <input
+              type="checkbox"
+              name="isSecret"
+              className="accent-yellow-400 w-4 h-4"
+            />
             <Lock size={14} /> 비밀글로 설정
           </label>
         </OptionRow>
 
-        <ContentTextarea placeholder="오늘 하루는 어땠나요?" />
-      </FormArea>
+        <ContentTextarea placeholder="오늘 하루는 어땠나요?" name="content" />
 
-      <SaveButton onClick={() => alert("저장 기능은 나중에 구현!")}>
-        <Save size={18} /> 일기 저장하기
-      </SaveButton>
+        <SaveButton disabled={isSubmitting}>
+          <Save size={18} /> {isSubmitting ? "저장 중..." : "일기 저장하기"}
+        </SaveButton>
+      </FormArea>
     </Container>
   );
 }
