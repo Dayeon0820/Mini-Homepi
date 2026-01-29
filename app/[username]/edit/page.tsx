@@ -34,7 +34,7 @@ export default async function EditPage({
     redirect("/");
   }
 
-  // 4. 알바생(Form)에게 데이터 전달
+  // 4. (Form)에게 데이터 전달
   return (
     <ProfileEditPage
       username={username}
