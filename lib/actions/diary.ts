@@ -105,6 +105,10 @@ export async function updatePostAction(
   formData: FormData,
 ) {
   const session = await getSession();
+
+  console.log("받은 postId:", postId);
+  console.log("내 세션 userId:", session?.userId);
+
   if (!session) return { success: false, message: "로그인이 필요합니다." };
 
   const title = formData.get("title") as string;

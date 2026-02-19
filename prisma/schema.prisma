@@ -12,7 +12,7 @@ datasource db {
 
 // 3. 유저 모델
 model User {
-  id        String   @id @default(uuid()) // string -> String (대문자!)
+  id        String   @id @default(uuid())
 
   username  String   @unique
   password  String
@@ -33,11 +33,29 @@ model User {
   likes     Like[]            // 내가 누른 좋아요
   guestbooks Guestbook[]      // 내가 남의 집에 쓴 방명록
 
-  // 친구 관계 (7.1 친구 추가 - 즉시 맞팔로우 개념)
-  followedBy User[]  @relation("UserFollows")
-  following  User[]  @relation("UserFollows")
+  // 내가 추가한 친구들 (Main)
+  myFriends   Friend[] @relation("UserAsSource")
+  // 나를 추가한 친구들 (Reverse)
+  friendedBy  Friend[] @relation("UserAsTarget")
 }
 
+
+// 친구 모델
+model Friend {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // 친구 신청한 사람 (나)
+  userId    String
+  user      User     @relation("UserAsSource", fields: [userId], references: [id], onDelete: Cascade)
+
+  // 친구 된 사람 (상대방)
+  friendId  String
+  friend    User     @relation("UserAsTarget", fields: [friendId], references: [id], onDelete: Cascade)
+
+  // 중복 친구 추가 방지
+  @@unique([userId, friendId])
+}
 // 4. 미니홈피 모델 (프로필 페이지)
 model Minihompy {
   id          String   @id @default(uuid())

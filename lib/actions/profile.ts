@@ -45,7 +45,8 @@ export async function getUserProfile(
         // followedBy(나를 추가한 사람) 또는 following(내가 추가한 사람) 중 선택
         _count: {
           select: {
-            followedBy: true, // 나를 친구로 등록한 사람 수 (팔로워)
+            friendedBy: true, // 나를 일촌으로 추가한 사람 수
+            myFriends: true, // 내가 일촌으로 추가한 사람 수
           },
         },
       },

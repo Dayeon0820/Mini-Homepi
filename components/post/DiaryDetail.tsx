@@ -219,6 +219,12 @@ export default function DiaryDetail({
     }
   };
 
+  //수정 핸들러
+
+  const handleEdit = () => {
+    router.push(`/${username}/diary/${post.id}/edit`);
+  };
+
   // 댓글 삭제 핸들러
   const handleDeleteComment = async (commentId: string) => {
     if (confirm("댓글을 삭제할까요?")) {
@@ -235,8 +241,9 @@ export default function DiaryDetail({
         {isOwner && (
           <div className="flex gap-2">
             <button
+              onClick={handleEdit}
               className="text-[#d7ccc8] hover:text-[#5d4037] p-1"
-              title="수정 (미구현)"
+              title="수정"
             >
               <Edit2 size={20} />
             </button>
