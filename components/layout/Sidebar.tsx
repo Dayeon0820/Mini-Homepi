@@ -2,7 +2,9 @@
 import styled from "styled-components";
 import { Smile, Star } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useParams } from "next/navigation";
+import { addFriendAction } from "@/lib/actions/friend";
 
 const SideContainer = styled.aside`
   width: 280px;
@@ -121,6 +123,16 @@ export default function Sidebar({
 }) {
   const params = useParams();
   const userId = params.username;
+  const [isAdding, setIsAdding] = useState(false);
+  //친구 신청 헨들러
+  const handleAddFriend = async () => {
+    if (confirm(`'${profile.username}'님에게 일촌 신청을 하시겠습니까?`)) {
+      setIsAdding(true);
+      const result = await addFriendAction(profile.username);
+      alert(result.message);
+      setIsAdding(false);
+    }
+  };
   return (
     <SideContainer>
       <TodayBox>
@@ -183,8 +195,10 @@ export default function Sidebar({
             </Link>
           </WaveButton>
         ) : (
-          // 손님일 때: 일촌 신청 (핑크 테마 자동 적용됨)
-          <WaveButton>❤ 친구 신청하기</WaveButton>
+          // 손님일 때: 일촌 신청 (핑크 테마)
+          <WaveButton onClick={handleAddFriend} disabled={isAdding}>
+            {isAdding ? "신청 중..." : "❤ 친구 신청하기"}
+          </WaveButton>
         )}
       </div>
     </SideContainer>

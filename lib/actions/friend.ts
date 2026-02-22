@@ -75,3 +75,32 @@ export async function deleteFriendAction(
     return { success: false, message: "삭제 실패" };
   }
 }
+
+// 유저 이름이나 아이디로 검색하는 액션
+export async function searchUsersAction(keyword: string) {
+  if (!keyword.trim()) return [];
+
+  try {
+    const users = await db.user.findMany({
+      where: {
+        OR: [
+          //닉네임이나 아이디에 검색어가 포함된 경우
+          { nickname: { contains: keyword, mode: "insensitive" } }, //대소문자 구분 x
+          { username: { contains: keyword, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        id: true,
+        username: true,
+        nickname: true,
+        avatarUrl: true,
+        bio: true,
+      },
+      take: 10, // 최대 10명까지만 가져오기
+    });
+    return users;
+  } catch (error) {
+    console.error("검색 에러:", error);
+    return [];
+  }
+}

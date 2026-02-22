@@ -12,6 +12,7 @@ import {
   UserMinus,
 } from "lucide-react";
 import { deleteFriendAction } from "@/lib/actions/friend"; // 삭제 액션
+import FriendSearchModal from "@/components/friends/FriendSearchModal";
 
 // --- 스타일 컴포넌트 ---
 
@@ -179,6 +180,7 @@ interface FriendProps {
 export default function FriendsPage({ initialFriends, isOwner }: FriendProps) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 검색어 필터링 로직
   const filteredFriends = initialFriends.filter((item) => {
@@ -226,7 +228,7 @@ export default function FriendsPage({ initialFriends, isOwner }: FriendProps) {
           {isOwner && (
             <button
               className="bg-yellow-400 text-white p-2 rounded-xl hover:bg-yellow-500 transition shadow-sm"
-              onClick={() => alert("새로운 친구 찾기 모달 띄우기!")}
+              onClick={() => setIsModalOpen(true)}
               title="새 친구 찾기"
             >
               <UserPlus size={20} />
@@ -290,6 +292,9 @@ export default function FriendsPage({ initialFriends, isOwner }: FriendProps) {
           </div>
         )}
       </GridArea>
+      {isModalOpen && (
+        <FriendSearchModal onClose={() => setIsModalOpen(false)} />
+      )}
     </Container>
   );
 }
