@@ -94,6 +94,9 @@ const FriendCard = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
+  width: 100%;
+  box-sizing: border-box; /* 패딩을 포함해서 너비 계산 */
+  min-width: 0;
   box-shadow: 3px 3px 0 ${(props) => props.theme.colors.secondary};
   transition: all 0.2s;
   cursor: pointer;
@@ -114,6 +117,13 @@ const Avatar = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const Info = styled.div`
@@ -124,24 +134,10 @@ const Info = styled.div`
   overflow: hidden;
 `;
 
-const NameRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  strong {
-    font-family: "NeoDunggeunmo", sans-serif;
-    color: ${(props) => props.theme.colors.brown700};
-    font-size: 1rem;
-  }
-
-  span {
-    font-size: 0.8rem;
-    color: #888;
-    background: #f5f5f5;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
+const NameRow = styled.strong`
+  font-family: "NeoDunggeunmo", sans-serif;
+  color: ${(props) => props.theme.colors.brown700};
+  font-size: 1rem;
 `;
 
 const IlchonName = styled.div`
@@ -257,12 +253,9 @@ export default function FriendsPage({ initialFriends, isOwner }: FriendProps) {
                 </Avatar>
 
                 <Info>
-                  <NameRow>
-                    <strong>{friend.nickname}</strong>
-                    <span>@{friend.username}</span>
-                  </NameRow>
-                  {/* 일촌명 필드는 DB에 없으니 임시 고정값이나 상태메시지(bio)로 대체 가능 */}
-                  <IlchonName>"{friend.bio || "반가워요!"}"</IlchonName>
+                  <NameRow>{friend.nickname}</NameRow>
+
+                  <IlchonName>@{friend.username}</IlchonName>
                 </Info>
 
                 <ActionButtons onClick={(e) => e.stopPropagation()}>

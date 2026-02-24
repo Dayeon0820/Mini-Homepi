@@ -71,7 +71,7 @@ export async function getUserProfile(
 
       // 카운트 정보 꺼내오기
 
-      friendsCount: user._count.followedBy, // 친구 수
+      friendsCount: user._count.myFriends, // 친구 수
     };
 
     return profileData;

@@ -139,6 +139,8 @@ model Guestbook {
   content   String
   createdAt DateTime @default(now())
 
+  isSecret    Boolean  @default(false)
+
   // 어느 홈피에 남겼는지
   minihompyId String
   minihompy   Minihompy @relation(fields: [minihompyId], references: [id])
