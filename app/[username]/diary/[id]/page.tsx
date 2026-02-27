@@ -9,6 +9,7 @@ interface Props {
 export default async function DiaryDetailPage({ params }: Props) {
   // 1. URL 파라미터 가져오기
   const { username, id } = await params;
+  const session = await getSession();
 
   // 2. DB에서 게시글 조회 (작성자 정보 포함)
   const post = await db.post.findUnique({
@@ -18,6 +19,15 @@ export default async function DiaryDetailPage({ params }: Props) {
       comments: {
         include: { author: true }, // 댓글 쓴 사람 정보도 필요함
         orderBy: { createdAt: "asc" }, // 댓글은 옛날 거부터 보여줌
+      },
+      // 게시글의 총 좋아요 개수 세기
+      _count: {
+        select: { likes: true },
+      },
+      //  현재 접속한 유저가 누른 좋아요가 있는지 확인하기
+      likes: {
+        where: { userId: session?.userId || "not-logged-in" },
+        select: { id: true }, // 데이터가 있는지 없는지만 알면 되니까 id만 가볍게 가져옵니다.
       },
     },
   });
@@ -30,7 +40,7 @@ export default async function DiaryDetailPage({ params }: Props) {
   }
 
   // 4. 권한 체크 (내 미니홈피이고, 내가 쓴 글인가?)
-  const session = await getSession();
+
   const isOwner = session?.username === username;
 
   //  현재 접속자 ID (댓글 삭제 권한 체크용)
@@ -45,6 +55,9 @@ export default async function DiaryDetailPage({ params }: Props) {
     );
   }
 
+  const initialLikeCount = post._count.likes;
+  const initialIsLiked = post.likes.length > 0;
+
   // 6. 클라이언트 컴포넌트로 데이터 전달
   return (
     <DiaryDetail
@@ -52,6 +65,8 @@ export default async function DiaryDetailPage({ params }: Props) {
       username={username}
       isOwner={isOwner}
       currentUserId={currentUserId}
+      initialLikeCount={initialLikeCount}
+      initialIsLiked={initialIsLiked}
     />
   );
 }

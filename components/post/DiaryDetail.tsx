@@ -14,13 +14,15 @@ import {
   Edit2,
   Trash2,
   X,
+  Heart,
 } from "lucide-react";
 import SubPageHeader from "@/components/layout/SubPageHeader";
 import { deletePostAction } from "@/lib/actions/diary";
 import {
   createCommentAction,
   deleteCommentAction,
-} from "@/lib/actions/comment"; //
+} from "@/lib/actions/comment";
+import { toggleLikeAction } from "@/lib/actions/like";
 
 // --- 스타일 컴포넌트 ---
 const Container = styled.div`
@@ -52,11 +54,25 @@ const ContentBox = styled.div`
 
 const PostHeader = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px; /* 위아래 줄 간격 */
   margin-bottom: 20px;
   border-bottom: 1px dashed #ddd;
   padding-bottom: 15px;
+`;
+
+// 첫 번째 줄: 제목과 날씨
+const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+// 두 번째 줄: 날짜와 좋아요 버튼
+const MetaRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const PostTitle = styled.h1`
@@ -69,6 +85,32 @@ const PostTitle = styled.h1`
 const PostDate = styled.span`
   font-size: 0.85rem;
   color: #888;
+`;
+
+const SmallLikeBtn = styled.button<{ $isLiked: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-family: "NeoDunggeunmo", sans-serif;
+  border: 1px solid ${(props) => (props.$isLiked ? "#FF6B6B" : "#ddd")};
+  background-color: ${(props) => (props.$isLiked ? "#FFF0F3" : "#fdfdfd")};
+  color: ${(props) => (props.$isLiked ? "#FF6B6B" : "#888")};
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: ${(props) =>
+      props.$isLiked ? "#FF6B6B" : props.theme.colors.brown300};
+    color: ${(props) =>
+      props.$isLiked ? "#FF6B6B" : props.theme.colors.brown500};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const PostBody = styled.div`
@@ -174,6 +216,8 @@ interface Props {
   username: string;
   isOwner: boolean;
   currentUserId: string | null; // 현재 로그인한 사람 ID
+  initialLikeCount: number;
+  initialIsLiked: boolean;
 }
 
 export default function DiaryDetail({
@@ -181,6 +225,8 @@ export default function DiaryDetail({
   username,
   isOwner,
   currentUserId,
+  initialIsLiked,
+  initialLikeCount,
 }: Props) {
   const router = useRouter();
   // 날짜 포맷팅
@@ -232,6 +278,33 @@ export default function DiaryDetail({
     }
   };
 
+  //  좋아요 상태 관리
+  const [likeCount, setLikeCount] = useState(initialLikeCount);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+
+  // 좋아요 버튼 클릭 핸들러
+  const handleLikeClick = async () => {
+    if (isLikeLoading) return; // 중복 클릭 방지
+
+    // 1. Optimistic UI Update (서버 응답 전에 화면부터 즉시 변경해서 빠릿빠릿하게!)
+    setIsLiked(!isLiked);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLikeLoading(true);
+
+    // 2. 서버에 진짜로 요청 보내기
+    const res = await toggleLikeAction(post.id, window.location.pathname);
+
+    // 3. 만약 서버에서 실패했다면 원래 상태로 되돌리기
+    if (!res.success) {
+      alert(res.message);
+      setIsLiked(isLiked); // 원래대로 복구
+      setLikeCount(likeCount); // 원래대로 복구
+    }
+
+    setIsLikeLoading(false);
+  };
+
   return (
     <Container>
       {/* 뒤로가기 네비게이션 */}
@@ -262,14 +335,31 @@ export default function DiaryDetail({
         {/*  본문 영역 */}
         <ContentBox>
           <PostHeader>
-            <div>
+            {/* 상단: 제목 & 날씨 */}
+            <TitleRow>
               <div className="flex items-center gap-2">
                 <PostTitle>{post.title}</PostTitle>
                 {post.isSecret && <Lock size={16} color="#aaa" />}
               </div>
+              {getWeatherIcon(post.weather)}
+            </TitleRow>
+
+            {/* 하단: 날짜 & 좋아요 버튼 (수직 수평 정렬) */}
+            <MetaRow>
               <PostDate>{formattedDate}</PostDate>
-            </div>
-            {getWeatherIcon(post.weather)}
+              <SmallLikeBtn
+                $isLiked={isLiked}
+                onClick={handleLikeClick}
+                disabled={isLikeLoading}
+              >
+                <Heart
+                  size={14} /* 크기를 20 -> 14로 줄임 */
+                  fill={isLiked ? "currentColor" : "none"}
+                  className={isLiked ? "animate-bounce" : ""}
+                />
+                좋아요 {likeCount}
+              </SmallLikeBtn>
+            </MetaRow>
           </PostHeader>
           <PostBody>{post.content}</PostBody>
         </ContentBox>
