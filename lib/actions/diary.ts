@@ -51,7 +51,7 @@ export async function getMonthlyPosts(
 ) {
   // 1. 해당 월의 시작일과 끝일 계산
   const startDate = new Date(year, month - 1, 1); // 예: 2026-01-01
-  const endDate = new Date(year, month, 0); // 예: 2026-01-31
+  const endDate = new Date(year, month, 1); // 예: 2026-02-01 00:00:00 (다음 달 1일)
 
   // 2. 주인 확인 (비밀글 볼 권한 체크용)
   const session = await getSession();
@@ -144,5 +144,44 @@ export async function updatePostAction(
   } catch (error) {
     console.error(error);
     return { success: false, message: "수정 중 오류 발생" };
+  }
+}
+
+//인기 게시글 조회
+export async function getPopularPosts(username: string) {
+  try {
+    const popularPosts = await db.post.findMany({
+      where: {
+        //1.해당 유저의 미니홈피 글만 가져오기
+        minihompy: {
+          user: { username: username },
+        },
+        //2. 비밀글은 인기글에 노출되면 안 되므로 제외
+        isSecret: false,
+      },
+      // 3.좋아요가 많은 순으로 정렬
+      orderBy: {
+        likes: {
+          _count: "desc",
+        },
+      },
+      //4. 4개만 가져오기
+      take: 4,
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+      },
+    });
+    return popularPosts;
+  } catch (error) {
+    console.error("인기 게시글 조회 실패:", error);
+    return [];
   }
 }

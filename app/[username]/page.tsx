@@ -1,29 +1,21 @@
 // app/page.tsx
-"use client";
 
-import MainFrame from "@/components/layout/MainFrame";
-import Sidebar from "@/components/layout/Sidebar";
-import styled from "styled-components";
+import { ContentArea } from "@/components/layout/HomeContentArea";
 import FeaturedPosts from "@/components/post/FeaturedPosts";
 import TodoWidgets from "@/components/home/TodoWidgets";
+import { getPopularPosts } from "@/lib/actions/diary";
 
-const ContentArea = styled.main`
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-  /* 배경에 아주 연한 도트 패턴을 넣어 '디자인된 느낌'을 극대화합니다 */
-  background-image: radial-gradient(
-    ${(props) => props.theme.colors.secondary} 1.5px,
-    transparent 1.5px
-  );
-  background-size: 25px 25px;
-  overflow-y: hidden;
-`;
+interface Props {
+  params: Promise<{ username: string }>;
+}
 
-export default function HomePage() {
+export default async function HomePage({ params }: Props) {
+  const { username } = await params;
+
+  const popularPosts = await getPopularPosts(username);
   return (
     <ContentArea>
-      <FeaturedPosts />
+      <FeaturedPosts posts={popularPosts} username={username} />
       <TodoWidgets />
     </ContentArea>
   );
