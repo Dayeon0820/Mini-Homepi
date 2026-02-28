@@ -53,11 +53,6 @@ const EmptyPostCard = styled.div`
   font-family: "NeoDunggeunmo", sans-serif;
   font-size: 0.85rem;
   text-align: center;
-  transition: all 0.15s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-  }
 `;
 
 const PostTitle = styled.h4`
