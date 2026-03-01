@@ -32,6 +32,7 @@ model User {
   comments  Comment[]         // 내가 쓴 댓글
   likes     Like[]            // 내가 누른 좋아요
   guestbooks Guestbook[]      // 내가 남의 집에 쓴 방명록
+  todos Todo[]
 
   // 내가 추가한 친구들 (Main)
   myFriends   Friend[] @relation("UserAsSource")
@@ -73,6 +74,8 @@ model Minihompy {
   // 이 홈피에 달린 콘텐츠들
   posts       Post[]       // 이 홈피의 게시물들 (다이어리)
   guestbooks  Guestbook[]  // 이 홈피에 남겨진 방명록
+
+  todos Todo[]
 }
 
 // 5. 게시물 (다이어리/게시판)
@@ -148,4 +151,21 @@ model Guestbook {
   // 누가 썼는지
   authorId    String
   author      User      @relation(fields: [authorId], references: [id])
+}
+
+//9. 투두리스트
+model Todo{
+  id          String   @id @default(uuid())
+  content     String   // 할 일 내용
+  isCompleted Boolean  @default(false) // 체크박스 완료 여부
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 어느 미니홈피의 투두리스트인지 연결
+  minihompyId String
+  minihompy   Minihompy @relation(fields: [minihompyId], references: [id], onDelete: Cascade)
+
+  // 작성자 (홈피 주인) 연결
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
