@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -15,7 +16,8 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-hook-form": "^7.69.0"
+    "react-hook-form": "^7.69.0",
+    "styled-components": "^6.3.11"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
@@ -24,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.23",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",

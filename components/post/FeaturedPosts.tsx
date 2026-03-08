@@ -36,7 +36,7 @@ const PostCard = styled.div<{ $variant?: "yellow" | "pink" }>`
   }
 `;
 
-const EmptyPostCard = styled.div`
+const EmptyPostCard = styled.div<{ $variant?: "yellow" | "pink" }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,7 +49,7 @@ const EmptyPostCard = styled.div`
       $variant === "pink" ? theme.colors.accent : theme.colors.primary};
   border-radius: ${({ theme }) => theme.borderRadius.large};
   background-color: rgba(255, 255, 255, 0.4);
-  color: ${(props) => props.theme.colors.gray400 || "#bbb"};
+  color: "#bbb";
   font-family: "NeoDunggeunmo", sans-serif;
   font-size: 0.85rem;
   text-align: center;
@@ -74,7 +74,6 @@ export interface PopularPost {
   id: string;
   title: string;
   createdAt: Date;
-  weather: string;
   _count: {
     likes: number;
     comments: number;

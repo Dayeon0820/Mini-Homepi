@@ -52,7 +52,7 @@ const TodoList = styled.ul`
   padding-right: 5px;
 `;
 
-const TodoItem = styled.li<{ done?: boolean }>`
+const TodoItem = styled.li<{ done?: boolean; $isOwner?: boolean }>`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -156,7 +156,6 @@ export default function TodoWidget({ todos, isOwner, username }: Props) {
     e.stopPropagation();
     if (!isOwner) return;
 
-    // confirm 없이 바로 삭제 액션 실행!
     await deleteTodoAction(todoId, pathname);
   };
   return (

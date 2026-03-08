@@ -40,8 +40,7 @@ const Coil = styled.div`
   width: 45px;
   height: 15px;
   /* 테마 색상 적용 (기본값 노랑) */
-  background-color: ${(props) =>
-    props.theme.colors.spiral || props.theme.colors.primary || "#FFE600"};
+  background-color: ${(props) => props.theme.colors.primary || "#FFE600"};
   border: 2px solid ${(props) => props.theme.colors.brown300};
   border-radius: 8px; /* 둥근 사각형 형태 */
   /* 픽셀 아트 느낌을 위한 단순한 그림자 */

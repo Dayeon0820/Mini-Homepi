@@ -5,7 +5,12 @@ import { cookies } from "next/headers";
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
-export async function getSession() {
+export interface SessionPayload {
+  userId: string;
+  username: string;
+}
+
+export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const session = cookieStore.get("session_token")?.value;
 
@@ -16,7 +21,7 @@ export async function getSession() {
     const { payload } = await jwtVerify(session, key, {
       algorithms: ["HS256"],
     });
-    return payload; // { userId: "...", username: "..." }
+    return payload as unknown as SessionPayload;
   } catch (error) {
     return null; // 토큰이 위조됐거나 만료됨
   }
