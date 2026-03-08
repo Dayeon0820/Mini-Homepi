@@ -64,6 +64,8 @@ model Minihompy {
   
   
   // 방문자 수 (3.1 통계)
+  lastVisitDate DateTime @default(now())
+
   todayVisit  Int      @default(0)
   totalVisit  Int      @default(0)
 

@@ -3,6 +3,7 @@
 import { getUserProfile } from "@/lib/actions/profile";
 import { getSession } from "@/lib/session";
 import ClientLayout from "@/components/layout/ClientLayout";
+import VisitTracker from "@/components/VisitTracker";
 
 export default async function UserLayout({
   children,
@@ -29,6 +30,7 @@ export default async function UserLayout({
   // 4. 모든 데이터를 껍데기(ClientLayout)에게 전달
   return (
     <ClientLayout isOwner={isOwner} profile={profile}>
+      <VisitTracker username={username} />
       {children}
     </ClientLayout>
   );
