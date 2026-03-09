@@ -6,6 +6,10 @@
 <img width="1122" height="740" alt="Image" src="https://github.com/user-attachments/assets/8f2bad66-f907-4273-9435-f5787b95f1c5" />
 
 ---
+## 배포 링크
+(https://mini-homepi.vercel.app/)
+
+
 
 ## 📅 프로젝트 개요
 
