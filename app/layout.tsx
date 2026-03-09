@@ -18,7 +18,7 @@ export default async function RootLayout({
   // 1. 서버에서 쿠키 확인 (로그인 했니?)
   const session = await getSession();
 
-  // 2. 방송국에 전달할 데이터 정리
+  // 2.  전달할 데이터 정리
   const authData = {
     isLoggedIn: !!session, // session이 있으면 true
     username: session?.username as string | undefined,

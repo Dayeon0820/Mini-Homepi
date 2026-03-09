@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { writeFile, mkdir } from "fs/promises"; // 파일 저장용 도구
 import { join } from "path";
+import { createClient } from "@supabase/supabase-js";
 
 // 1. 프론트엔드에 넘겨줄 데이터 모양 정의 (Interface)
 // DB 필드명(avatarUrl)과 UI에서 쓸 이름(profileImage)이 달라도 여기서 매핑해주면 된다.
@@ -81,6 +82,10 @@ export async function getUserProfile(
   }
 }
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 // 폼에서 넘어오는 데이터의 타입 정의
 interface ProfileUpdateState {
   success: boolean;
@@ -107,33 +112,34 @@ export async function updateProfileAction(
   }
 
   try {
-    // 📸 [파일 처리 로직 추가됨]
-    // 사용자가 새 파일을 업로드했다면?
+    // [Supabase 스토리지 파일 업로드 로직]
     if (file && file.size > 0) {
-      // (1) 파일을 버퍼(데이터 덩어리)로 변환
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+      // (1) 파일 이름 만들기 (기존 확장자 유지)
+      // 예: dana_1772955460142.png
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${username}_${Date.now()}.${fileExt}`;
 
-      // (2) 파일 이름 겹치지 않게 만들기 (예: lemon_123456.png)
-      // 파일 확장자 추출 (예: .png) 또는 그냥 .png로 고정해도 됨
-      const fileName = `${username}_${Date.now()}.png`;
+      // (2) Supabase에 넣기
+      const { data, error } = await supabase.storage
+        .from("avatars") //  Supabase에 만든 버킷 이름과 똑같아야 함
+        .upload(fileName, file, {
+          upsert: true, // 같은 이름이 있으면 덮어쓰기
+        });
 
-      // (3) 저장할 경로 설정 (public/uploads 폴더)
-      const uploadDir = join(process.cwd(), "public", "uploads");
+      if (error) {
+        console.error("Supabase 업로드 에러:", error);
+        return { success: false, message: "이미지 저장에 실패했습니다." };
+      }
 
-      // 폴더가 없으면 만들기
-      await mkdir(uploadDir, { recursive: true });
+      // (3) 업로드 성공 후 공개 URL 발급
+      const { data: publicUrlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(fileName);
 
-      const filePath = join(uploadDir, fileName);
+      // (4) DB에 저장할 URL
+      finalAvatarUrl = publicUrlData.publicUrl;
 
-      // (4) 실제 파일 저장 (하드디스크에 쓰기)
-      await writeFile(filePath, buffer);
-
-      // (5) DB에 저장할 URL 주소 만들기
-      // 브라우저에서는 http://localhost:3000/uploads/파일이름.png 로 접근함
-      finalAvatarUrl = `/uploads/${fileName}`;
-
-      console.log(`📸 새 프로필 사진 저장됨: ${finalAvatarUrl}`);
+      console.log(`Supabase에 새 프로필 사진 저장됨: ${finalAvatarUrl}`);
     }
 
     // 4. DB 업데이트
@@ -142,11 +148,11 @@ export async function updateProfileAction(
       data: {
         nickname: nickname,
         bio: bio,
-        avatarUrl: finalAvatarUrl, // 여기서 새로 만든 URL(혹은 기존 URL)을 저장
+        avatarUrl: finalAvatarUrl,
       },
     });
 
-    console.log(`✅ ${username}님의 프로필 업데이트 완료!`);
+    console.log(`${username}님의 프로필 업데이트 완료!`);
 
     revalidatePath(`/${username}`);
     return { success: true, message: "수정되었습니다." };
